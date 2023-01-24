@@ -50,7 +50,7 @@ public class AdministratorController {
     public Optional<Product> getProduct(@PathVariable("id") @Parameter(description = "Идентификатор товара") Long id) {
         Optional<Product> product = prodRepo.findById(id);
         if (product.isEmpty()) {
-            throw new CustomResponseException();
+            throw new CustomResponseException(id);
         }
         return product;
     }
@@ -59,6 +59,9 @@ public class AdministratorController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Удаляет товар", description = "Удаляет товар из таблицы по указанному в пути id")
     public void deleteProduct(@PathVariable @Parameter(description = "Идентификатор товара") Long id) {
+        if (!prodRepo.existsById(id)) {
+            throw new CustomResponseException(id);
+        }
         prodRepo.deleteById(id);
     }
 
@@ -67,14 +70,17 @@ public class AdministratorController {
     @Operation(summary = "Изменяет товар", description = "Изменяет товар и сохраняет его в таблицу по указанному в пути id")
     public Product updateProduct(@PathVariable @Parameter(description = "Идентификатор товара") Long id,
                                  @RequestBody @Parameter(description = "Изменения для товара передаваемые в теле запроса") Product product) {
-        Product prod = prodRepo.findById(id).get();
+        if (!prodRepo.existsById(id)) {
+            throw new CustomResponseException(id);
+        }
+        Product result = prodRepo.findById(id).get();
         if (product.getName() != null) {
-            prod.setName(product.getName());
+            result.setName(product.getName());
         }
         if (product.getPrice() != null) {
-            prod.setPrice(product.getPrice());
+            result.setPrice(product.getPrice());
         }
-        return prodRepo.save(prod);
+        return prodRepo.save(result);
     }
 
     @GetMapping("/orders")
@@ -97,7 +103,7 @@ public class AdministratorController {
     public Optional<Order> nonConfirmOrd(@PathVariable @Parameter(description = "Идентификатор заказа") Long id) {
         Optional<Order> order = orderRepo.findById(id);
         if (order.isEmpty()) {
-            throw new CustomResponseException();
+            throw new CustomResponseException(id);
         }
         return order;
     }
@@ -106,6 +112,9 @@ public class AdministratorController {
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Подтверждает заказ", description = "Устанавливает в true метку подтверждения заказа")
     public void orderConfirmation(@PathVariable @Parameter(description = "Идентификатор товара") Long id) {
+        if (!orderRepo.existsById(id)) {
+            throw new CustomResponseException(id);
+        }
         Order order = orderRepo.findById(id).get();
         order.setOrderConfirmation(true);
         orderRepo.save(order);

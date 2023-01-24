@@ -1,6 +1,7 @@
 package com.solution.testshop.controller;
 
 import com.solution.testshop.exception.CustomResponseException;
+import com.solution.testshop.exception.NullOrderException;
 import com.solution.testshop.model.Order;
 import com.solution.testshop.model.Product;
 import com.solution.testshop.model.User;
@@ -55,7 +56,7 @@ public class UserController {
     public Optional<Product> getProduct(@PathVariable("id") @Parameter(description = "Идентификатор товара") Long id) {
         Optional<Product> product = prodRepo.findById(id);
         if (product.isEmpty()) {
-            throw new CustomResponseException();
+            throw new CustomResponseException(id);
         }
         return product;
     }
@@ -69,13 +70,17 @@ public class UserController {
         if (order.getUser() == null) {
             order.setUser(user);
         }
+        if(!prodRepo.existsById(id)) {
+            throw new CustomResponseException(id);
+        }
         Product prod = prodRepo.findById(id).get();
         order.addProduct(prod);
     }
 
     @GetMapping("/orders")
     @ResponseStatus(HttpStatus.OK)
-    @Operation(summary = "Возвращает список всех заказов текущего пользователя")
+    @Operation(summary = "Возвращает список всех заказов текущего пользователя",
+               description = "Параметр User не заполняется - это текущий пользователь, передается в метод приложением")
     public Optional<List<Order>> getUserOrders(@ParameterObject @AuthenticationPrincipal
                                                @Parameter(description = "Текущий пользователь") User user) {
         Long id = user.getId();
@@ -84,7 +89,8 @@ public class UserController {
 
     @GetMapping("/order")
     @ResponseStatus(HttpStatus.OK)
-    @Operation(summary = "Возвращает заказ текущего сеанса")
+    @Operation(summary = "Возвращает заказ текущего сеанса",
+               description = "Параметр order не заполняется - это аттрибут сессии, передается в метод приложением")
     public Order getOrder(@ParameterObject @ModelAttribute("order") @Parameter(description = "Атрибут сессии - заказ") Order order) {
         return order;
     }
@@ -94,6 +100,9 @@ public class UserController {
     @Operation(summary = "Оплата заказа", description = "Устанавливается метка оплаты заказа и его сохранение в таблицу")
     public void payment(@ModelAttribute("order") @Parameter(description = "Атрибут сессии - заказ") Order order,
                         SessionStatus sessionStatus) {
+        if(order.getUser() == null) {
+            throw new NullOrderException();
+        }
         order.setIsPaid(true);
         order.setDate(new Timestamp(new Date().getTime()));
         orderRepo.save(order);

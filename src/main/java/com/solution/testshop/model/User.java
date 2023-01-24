@@ -1,5 +1,6 @@
 package com.solution.testshop.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -28,6 +29,7 @@ public class User implements UserDetails {
     private String username;
 
     @Schema(description = "Пароль пользователя")
+    @JsonIgnore
     private String password;
 
     @Schema(description = "Роль пользователя")
