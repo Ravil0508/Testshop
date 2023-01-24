@@ -21,7 +21,6 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Schema(description = "Уникальный идентификатор")
-    @JsonIgnore
     private Long id;
 
     @Schema(description = "Наименование товара")
