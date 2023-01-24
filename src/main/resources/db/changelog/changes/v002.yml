@@ -1,0 +1,19 @@
+databaseChangeLog:
+  - changeSet:
+      id:  Rename
+      author:  ganievrav
+      changes:
+      -  renameColumn:
+          columnDataType:  bigserial
+          newColumnName:  orders_id
+          oldColumnName:  order_id
+          tableName:  orders_products
+  - changeSet:
+      id: Rename-1
+      author: ganievrav
+      changes:
+        - renameColumn:
+            columnDataType: bigserial
+            newColumnName: products_id
+            oldColumnName: product_id
+            tableName: orders_products

@@ -1,0 +1,138 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: DEV
+      author: ganievrav
+      changes:
+        - createTable:
+            tableName: "users"
+            remarks: Пользователи
+            columns:
+              - column:
+                  name: id
+                  type: bigserial
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: user_pk
+                    nullable: false
+              - column:
+                  name: username
+                  type: varchar(50)
+                  remarks: Имя пользователя
+                  constraints:
+                    unique: true
+                    nullable: false
+              - column:
+                  name: password
+                  type: varchar(255)
+                  remarks: Пароль пользователя
+                  constraints:
+                    nullable: false
+              - column:
+                  name: role
+                  type: varchar(50)
+                  constraints:
+                    nullable: false
+  - changeSet:
+      id: DEV-1
+      author: ganievrav
+      changes:
+          - createTable:
+              tableName: "orders"
+              remarks: Заказы
+              columns:
+                - column:
+                    name: id
+                    type: bigserial
+                    autoIncrement: true
+                    constraints:
+                      primaryKey: true
+                      primaryKeyName: order_pk
+                      nullable: false
+                - column:
+                    name: user_id
+                    type: integer
+                    constraints:
+                      nullable: false
+                      referencedTableName: "users"
+                      referencedColumnNames: id
+                      foreignKeyName: user_fk
+                - column:
+                    name: date
+                    type: timestamp without time zone
+                    defaultValue: now()
+                    constraints:
+                      nullable: false
+                - column:
+                    name: order_confirmation
+                    type: boolean
+                    defaultValue: "false"
+                    constraints:
+                      nullable: false
+                - column:
+                    name: is_paid
+                    type: boolean
+                    defaultValue: "false"
+                    constraints:
+                      nullable: false
+  - changeSet:
+      id: DEV-2
+      author: ganievrav
+      changes:
+        - createTable:
+            tableName: "product"
+            remarks: Товары
+            columns:
+                - column:
+                    name: id
+                    type: bigserial
+                    autoIncrement: true
+                    constraints:
+                        primaryKey: true
+                        primaryKeyName: product_pk
+                        nullable: false
+                - column:
+                    name: name
+                    type: varchar(100)
+                    remarks: Наименование товара
+                    constraints:
+                        nullable: false
+                - column:
+                    name: price
+                    type: double
+                    constraints:
+                        nullable: false
+  - changeSet:
+      id: DEV-3
+      author: ganievrav
+      changes:
+        - createTable:
+            tableName: "orders_products"
+            remarks: Сопоставление заказы-продукты
+            columns:
+              - column:
+                  name: order_id
+                  type: bigserial
+                  constraints:
+                    nullable: false
+                    referencedTableName: "orders"
+                    referencedColumnNames: id
+                    foreignKeyName: order_fk
+              - column:
+                  name: product_id
+                  type: bigserial
+                  constraints:
+                    nullable: false
+                    referencedTableName: "product"
+                    referencedColumnNames: id
+                    foreignKeyName: product_fk
+  - changeSet:
+      id: DEV-4
+      author: ganievrav
+      dbms: postgresql
+      changes:
+        - createSequence:
+            sequenceName: "hibernate_sequence"
+            startValue: 1
+            incrementBy: 1

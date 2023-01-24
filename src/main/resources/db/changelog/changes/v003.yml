@@ -1,0 +1,59 @@
+databaseChangeLog:
+  - changeSet:
+      id: addData
+      author: ganievrav
+      changes:
+        - insert:
+            tableName: product
+            columns:
+              - column:
+                  name: name
+                  value: "Phone"
+              - column:
+                  name: price
+                  value: "5000"
+        - insert:
+            tableName: product
+            columns:
+              - column:
+                  name: name
+                  value: "Computer"
+              - column:
+                  name: price
+                  value: "50000"
+        - insert:
+            tableName: product
+            columns:
+              - column:
+                  name: name
+                  value: "Smartphone"
+              - column:
+                  name: price
+                  value: "15000"
+        - insert:
+            tableName: product
+            columns:
+              - column:
+                  name: name
+                  value: "TV"
+              - column:
+                  name: price
+                  value: "10000"
+        - insert:
+            tableName: product
+            columns:
+              - column:
+                  name: name
+                  value: "Radio"
+              - column:
+                  name: price
+                  value: "500"
+        - insert:
+            tableName: product
+            columns:
+              - column:
+                  name: name
+                  value: "Tablet"
+              - column:
+                  name: price
+                  value: "18000"
