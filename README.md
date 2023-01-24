@@ -1,7 +1,7 @@
 # Для запуска приложения введите поочередно в командной строке следующие команды:
 ## 1. git clone https://github.com/Ravil0508/testshop.git
-## 2. cd testchop
-## 3. ./mvnw clean package -DskipTests
+## 2. cd testshop
+## 3. ./mvnw package -DskipTests
 ## 4. cp target/testshop-0.0.1-SNAPSHOT.jar src/main/resources/docker
 ## 5. cd src/main/resources/docker
 ## 6. docker-compose up
