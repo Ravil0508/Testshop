@@ -20,7 +20,7 @@ public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Schema(description = "Уникальный идентификатор")
+    @Schema(description = "Уникальный идентификатор", accessMode = Schema.AccessMode.READ_ONLY)//accessMode = Schema.AccessMode.READ_ONLY
     private Long id;
 
     @Schema(description = "Наименование товара")

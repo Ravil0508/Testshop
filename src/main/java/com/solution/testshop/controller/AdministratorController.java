@@ -85,7 +85,7 @@ public class AdministratorController {
 
     @GetMapping("/orders")
     @ResponseStatus(HttpStatus.OK)
-    @Operation(summary = "Возвращает список всех заказов всех пользователей")
+    @Operation(summary = "Возвращает список всех оплаченных и подтвержденных заказов всех пользователей")
     public Optional<List<Order>> getAllOrders() {
         return orderRepo.findOrderByOrderConfirmationIsTrue();
     }

@@ -11,7 +11,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -64,9 +63,9 @@ public class UserController {
     @PostMapping("/products/{prodId}")
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Добавляет товар в заказ")
-    public void addProduct(@ModelAttribute("order") @Parameter(description = "Атрибут сессии - заказ") Order order,
+    public void addProduct(@ModelAttribute("order") @Parameter(description = "Атрибут сессии - заказ", hidden = true) Order order,
                            @PathVariable("prodId") @Parameter(description = "Идентификатор товара") Long id,
-                           @AuthenticationPrincipal @Parameter(description = "Текущий пользователь") User user) {
+                           @AuthenticationPrincipal @Parameter(description = "Текущий пользователь", hidden = true) User user) {
         if (order.getUser() == null) {
             order.setUser(user);
         }
@@ -81,8 +80,8 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Возвращает список всех заказов текущего пользователя",
                description = "Параметр User не заполняется - это текущий пользователь, передается в метод приложением")
-    public Optional<List<Order>> getUserOrders(@ParameterObject @AuthenticationPrincipal
-                                               @Parameter(description = "Текущий пользователь") User user) {
+    public Optional<List<Order>> getUserOrders(@AuthenticationPrincipal
+                                               @Parameter(description = "Текущий пользователь", hidden = true) User user) {
         Long id = user.getId();
         return orderRepo.findOrderByUserId(id);
     }
@@ -91,16 +90,16 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     @Operation(summary = "Возвращает заказ текущего сеанса",
                description = "Параметр order не заполняется - это аттрибут сессии, передается в метод приложением")
-    public Order getOrder(@ParameterObject @ModelAttribute("order") @Parameter(description = "Атрибут сессии - заказ") Order order) {
+    public Order getOrder(@ModelAttribute("order") @Parameter(description = "Атрибут сессии - заказ", hidden = true) Order order) {
         return order;
     }
 
     @PostMapping("/order")
     @ResponseStatus(HttpStatus.CREATED)
     @Operation(summary = "Оплата заказа", description = "Устанавливается метка оплаты заказа и его сохранение в таблицу")
-    public void payment(@ModelAttribute("order") @Parameter(description = "Атрибут сессии - заказ") Order order,
+    public void payment(@ModelAttribute("order") @Parameter(description = "Атрибут сессии - заказ", hidden = true) Order order,
                         SessionStatus sessionStatus) {
-        if(order.getUser() == null) {
+        if(order.getUser() == null || order.getProducts().isEmpty()) {
             throw new NullOrderException();
         }
         order.setIsPaid(true);
