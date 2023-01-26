@@ -10,6 +10,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Positive;
 
 @Entity
 @Data
@@ -23,9 +26,11 @@ public class Product {
     @Schema(description = "Уникальный идентификатор", accessMode = Schema.AccessMode.READ_ONLY)//accessMode = Schema.AccessMode.READ_ONLY
     private Long id;
 
+    @NotBlank
     @Schema(description = "Наименование товара")
     private String name;
 
+    @Positive
     @Schema(description = "Цена товара")
     private Double price;
 }
